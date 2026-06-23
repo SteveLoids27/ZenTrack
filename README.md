@@ -106,8 +106,10 @@ psql "host=localhost port=5433 dbname=zentrack user=postgres"
 ## Git remote
 
 ```bash
-git remote add origin git@github.com:SteveLoids27/ZenTrack.git
+git remote add origin git@github-steveloids27:SteveLoids27/ZenTrack.git
 ```
+
+> Use `github-steveloids27` (not `github.com`) so SSH uses the **SteveLoids27** key. Plain `git@github.com` authenticates as a different GitHub account on this machine.
 
 ## Development milestones
 
