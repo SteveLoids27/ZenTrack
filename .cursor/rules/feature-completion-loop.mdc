@@ -1,0 +1,45 @@
+---
+description: Enforce full feature completion before handoff
+alwaysApply: true
+---
+
+# Feature Completion Loop
+
+For any request to build or change a feature, work in an autonomous completion loop and do not stop at partial implementation.
+
+## Required workflow
+
+1. Understand the request and identify impacted files and integration points.
+2. Implement the feature end-to-end, including edge-case handling required by the request.
+3. Run relevant project checks (tests, lint, build, typecheck, or equivalent validation).
+4. If checks fail, fix issues and rerun checks until green.
+5. Verify behavior against acceptance criteria from the user request.
+6. Hand off only when the work is PR-ready:
+   - core functionality is complete (no placeholder TODOs for required logic),
+   - no known regressions introduced by the change,
+   - clear summary of changes and verification steps is provided.
+
+## Execution behavior
+
+- Be proactive: execute implementation and validation, not analysis-only responses.
+- Continue iterating until done unless blocked by missing requirements or external constraints.
+- If blocked, report the exact blocker and ask only for the minimum input required to proceed.
+
+## Failure and timeout policy
+
+- Treat failures and timeouts as recoverable by default; do not stop after the first failed run.
+- For each failed command, capture the concrete error output and identify the most likely root cause before retrying.
+- Timeout handling sequence:
+  1. rerun once with a longer but reasonable timeout,
+  2. narrow scope to a targeted check (for example, a single test file or package),
+  3. check for hang conditions (watch mode, blocked network dependency, deadlock, waiting prompt),
+  4. apply a fix/workaround and rerun.
+- Retry limits:
+  - maximum 3 retries for the same command pattern without a material change,
+  - maximum 2 timeout increases for the same command before changing strategy.
+- Do not perform blind infinite retries; each retry must include a new hypothesis or code/config change.
+- If still blocked after retries, escalate with:
+  - what failed,
+  - what was attempted,
+  - current best hypothesis,
+  - exact next input needed from the user.

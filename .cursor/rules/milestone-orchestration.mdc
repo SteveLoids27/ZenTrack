@@ -1,0 +1,43 @@
+---
+description: Milestone-based build orchestration with review gates for Digital Detox Timer
+alwaysApply: true
+---
+
+# Milestone Orchestration
+
+When building **Digital Detox Timer** or any work guided by `.cursor/prompts/digital-detox-timer-build.md`, follow milestone-based orchestration aligned with the Adaptive Orchestrator.
+
+## Workflow per milestone
+
+1. Read `.cursor/context/application.md`, `learnings.md`, `current-task.md`, and the active milestone in the build prompt.
+2. Plan before implementing — numbered steps with verification criteria.
+3. Implement the milestone end-to-end (no partial handoff).
+4. Run automated checks (tests, lint, build, typecheck).
+5. Complete the self-review checklist in the build prompt.
+6. Launch **Bugbot** subagent for code quality review (`subagent_type: bugbot`, `readonly: true`).
+7. Fix valid Bugbot findings; re-run checks.
+8. Update context files (`application.md`, `learnings.md`, `current-task.md`).
+9. Provide the milestone handoff template from the build prompt.
+10. Proceed to the next milestone only when all gates pass.
+
+## Orchestrator alignment
+
+- Ground decisions in the actual codebase — never assume files or APIs exist without verification.
+- Delegate narrow work to subagents; parent agent owns integration and final verification.
+- Record learnings after every milestone.
+- Do not commit, push, or deploy unless explicitly asked.
+
+## Review gate policy
+
+- Self-review and Bugbot are **required** after every milestone, not optional.
+- Bugbot findings marked Critical or High must be fixed before milestone completion.
+- Medium/Low findings: fix or document deferral reason in `learnings.md`.
+
+## Scope control
+
+- Build MVP milestones M0–M8 only unless user expands scope.
+- V2/V3 features (usage tracking, AI coach, social) are out of scope for V1.0.
+
+## On failure or timeout
+
+Follow `.cursor/rules/feature-completion-loop.mdc` failure and timeout policy. Escalate only after retries are exhausted.
