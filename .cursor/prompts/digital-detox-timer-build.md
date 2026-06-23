@@ -8,12 +8,24 @@
 
 ## Startup (every session)
 
-1. Read `.cursor/context/application.md`, `learnings.md`, `current-task.md`
-2. Read `docs/DIGITAL_DETOX_TIMER_SPEC.md` for the active milestone section
-3. Explore the codebase — confirm what exists vs. what the milestone requires
-4. State understanding in 3–5 sentences; list gaps and risks
-5. Update `current-task.md` with active milestone and acceptance criteria
-6. Produce a numbered plan with verification steps **before** coding
+1. **Checkout dev branch:** `git checkout dev-steve && git pull origin dev-steve`
+2. Read `.cursor/context/application.md`, `learnings.md`, `current-task.md`
+3. Read `docs/DIGITAL_DETOX_TIMER_SPEC.md` for the active milestone section
+4. Explore the codebase — confirm what exists vs. what the milestone requires
+5. State understanding in 3–5 sentences; list gaps and risks
+6. Update `current-task.md` with active milestone and acceptance criteria
+7. Produce a numbered plan with verification steps **before** coding
+
+## Git branch policy
+
+| Branch | Role |
+|--------|------|
+| `dev-steve` | All milestone building (M1–M8) — **work here** |
+| `main` | Stable — merge via PR when milestone(s) complete |
+
+- Push milestone commits to `origin/dev-steve`.
+- Bugbot reviews use `Diff: branch changes` with base `main` (or `uncommitted changes` on `dev-steve`).
+- At M8: open PR `dev-steve` → `main`, finalize README, merge after approval.
 
 ---
 

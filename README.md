@@ -105,6 +105,22 @@ To connect manually:
 psql "host=localhost port=5433 dbname=zentrack user=postgres"
 ```
 
+## Git workflow
+
+| Branch | Purpose |
+|--------|---------|
+| `dev-steve` | Active development — all milestone building |
+| `main` | Stable release — merge from `dev-steve` via PR |
+
+```bash
+git checkout dev-steve
+git pull origin dev-steve
+# ... work on milestones M1–M8 ...
+git push origin dev-steve
+```
+
+Open a PR to merge `dev-steve` → `main` when a milestone (or M8 MVP) is complete.
+
 ## Git remote
 
 ```bash

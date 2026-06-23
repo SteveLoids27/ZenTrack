@@ -4,7 +4,7 @@
 
 **Active milestone:** M0 — Complete
 **Next milestone:** M1 — Authentication
-**Branch:** main (uncommitted)
+**Branch:** `dev-steve` (milestone development)
 **Last updated:** 2026-06-23
 
 ## Goal
