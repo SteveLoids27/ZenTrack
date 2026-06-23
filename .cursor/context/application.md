@@ -55,8 +55,25 @@ Mobile (Expo)  --REST/JWT-->  FastAPI API  -->  PostgreSQL
 
 ## Repository
 
-- **GitHub:** `git@github.com:SteveLoids27/ZenTrack.git`
+- **GitHub:** `git@github-steveloids27:SteveLoids27/ZenTrack.git`
 - **Product name:** ZenTrack (Digital Detox Timer)
+
+## Git workflow
+
+| Branch | Purpose |
+|--------|---------|
+| `dev-steve` | **Active development** — all milestone building (M1–M8) |
+| `main` | Stable release branch — merge from `dev-steve` via PR |
+
+**Rules for agents:**
+
+- Always work on `dev-steve` for milestone implementation.
+- Before starting a session: `git checkout dev-steve && git pull origin dev-steve`
+- Commit milestone work to `dev-steve` (when user requests commit/push).
+- Open PR `dev-steve` → `main` after each milestone passes review gates, or batch at M8.
+- Never push directly to `main` unless user explicitly requests a release merge.
+
+**GitHub environment:** `dev-steve` (milestone build environment on GitHub).
 
 ## Entry Points
 

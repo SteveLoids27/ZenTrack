@@ -4,6 +4,7 @@ Use this command to force a completion loop for any feature request.
 
 When I ask for a feature with `/loops`, follow this process and do not stop early:
 
+0. Ensure you are on `dev-steve`: `git checkout dev-steve && git pull origin dev-steve`
 1. Understand the feature request and inspect the codebase for the correct integration points.
 2. For **Digital Detox Timer**, read `.cursor/prompts/digital-detox-timer-build.md` and work the active milestone with review gates.
 3. Implement the feature end-to-end (not partial scaffolding).

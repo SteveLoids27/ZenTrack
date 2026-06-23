@@ -7,6 +7,12 @@ alwaysApply: true
 
 When building **Digital Detox Timer** or any work guided by `.cursor/prompts/digital-detox-timer-build.md`, follow milestone-based orchestration aligned with the Adaptive Orchestrator.
 
+## Development branch
+
+- **All milestone work happens on `dev-steve`** (GitHub environment: `dev-steve`).
+- `main` is the stable branch; merge via PR only after milestone review gates pass.
+- At session start: `git checkout dev-steve && git pull origin dev-steve`.
+
 ## Workflow per milestone
 
 1. Read `.cursor/context/application.md`, `learnings.md`, `current-task.md`, and the active milestone in the build prompt.
