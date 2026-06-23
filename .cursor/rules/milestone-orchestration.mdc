@@ -38,6 +38,10 @@ When building **Digital Detox Timer** or any work guided by `.cursor/prompts/dig
 - Build MVP milestones M0–M8 only unless user expands scope.
 - V2/V3 features (usage tracking, AI coach, social) are out of scope for V1.0.
 
+## Final README on GitHub
+
+At **M8 (application finish)**, agents must finalize root `README.md` per the checklist in `.cursor/prompts/digital-detox-timer-build.md`, commit it, and push to `git@github-steveloids27:SteveLoids27/ZenTrack.git` so GitHub displays the complete project documentation. Do not mark the MVP complete without this step (unless the user explicitly defers push).
+
 ## On failure or timeout
 
 Follow `.cursor/rules/feature-completion-loop.mdc` failure and timeout policy. Escalate only after retries are exhausted.

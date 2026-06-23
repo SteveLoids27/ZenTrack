@@ -314,15 +314,45 @@ Dashboard → Select Duration → Start → Pause → Resume → Complete → Se
 
 ## Milestone M8 — Testing + Hardening
 
-**Goal:** Integration coverage, bug fixes, PR-ready MVP.
+**Goal:** Integration coverage, bug fixes, PR-ready MVP, and **final README on GitHub**.
 
 ### Deliverables
 
 - Integration tests for critical flows (auth → session → streak → dashboard)
 - Fix all known bugs from M1–M7
 - API OpenAPI docs complete
-- README: run, test, deploy, env vars
+- **Finalize `README.md`** (see checklist below) — this is the public face of the repo on GitHub
 - Security pass: rate limiting on auth, CORS config, input sanitization
+
+### Final README checklist (required before MVP is complete)
+
+Update root `README.md` so a new developer can clone and run without chat context. Include:
+
+- [ ] Project name, tagline, and product principle
+- [ ] Feature list (all MVP features implemented in M1–M7)
+- [ ] Architecture overview (mobile ↔ API ↔ Postgres ↔ FCM)
+- [ ] Prerequisites (Docker, Node, Python versions)
+- [ ] Environment variables table (from `.env.example` with descriptions)
+- [ ] Quick start: clone → `.env` → `docker compose up` → mobile `npm start`
+- [ ] API docs URL (`/docs`) and key endpoint summary
+- [ ] Database setup and migrations (`alembic upgrade head`)
+- [ ] How to run tests (API + mobile)
+- [ ] Android emulator note (`10.0.2.2` vs `localhost`)
+- [ ] Git remote: `git@github-steveloids27:SteveLoids27/ZenTrack.git`
+- [ ] Milestone status table (all M0–M8 marked Done)
+- [ ] Known limitations and V2 roadmap (brief)
+- [ ] Troubleshooting (common errors: Docker not running, SSH account, DB port)
+
+### GitHub handoff (end of M8)
+
+After README is finalized:
+
+1. Commit: `docs: finalize README for MVP release`
+2. Ensure remote uses SteveLoids27 SSH: `git@github-steveloids27:SteveLoids27/ZenTrack.git`
+3. Push to `main` so GitHub displays the complete README
+4. Confirm with user that README is live on https://github.com/SteveLoids27/ZenTrack
+
+Do **not** mark the application finished until `README.md` is pushed to GitHub (or user explicitly defers push).
 
 ### Acceptance criteria
 
@@ -330,6 +360,8 @@ Dashboard → Select Duration → Start → Pause → Resume → Complete → Se
 - [ ] Mobile test suite green (or documented scope)
 - [ ] End-to-end smoke: register → focus session → reflection → badge
 - [ ] No P0/P1 Bugbot findings open
+- [ ] **Final README checklist complete and committed**
+- [ ] **README pushed to GitHub `main`**
 - [ ] PR-ready summary with verification steps
 
 ---
@@ -359,6 +391,10 @@ Dashboard → Select Duration → Start → Pause → Resume → Complete → Se
 
 ### Next
 - Proceed to Milestone M[X+1]: [name]
+
+### README (M8 only)
+- [ ] Final README checklist complete
+- [ ] Committed and pushed to GitHub main
 ```
 
 ---
