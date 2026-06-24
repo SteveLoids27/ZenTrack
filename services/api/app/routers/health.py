@@ -1,11 +1,10 @@
-from __future__ import annotations
-
-from typing import Union
+from typing import Optional, Union
 
 from fastapi import APIRouter, Depends
+from sqlalchemy import text
 from sqlalchemy.orm import Session
 
-from app.database import check_database_connection, get_db
+from app.database import get_db
 
 router = APIRouter(tags=["health"])
 
@@ -14,7 +13,8 @@ router = APIRouter(tags=["health"])
 def health_check(db: Session = Depends(get_db)) -> dict[str, Union[str, bool]]:
     db_ok = False
     try:
-        db_ok = check_database_connection()
+        db.execute(text("SELECT 1"))
+        db_ok = True
     except Exception:
         db_ok = False
 

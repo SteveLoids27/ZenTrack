@@ -21,6 +21,9 @@ class Settings(BaseSettings):
     db_password: str = "postgres"
     db_name: str = "zentrack"
     cors_origins: str = "*"
+    jwt_secret_key: str = "change-me-to-a-long-random-secret-in-production"
+    jwt_algorithm: str = "HS256"
+    jwt_expire_minutes: int = 60 * 24
 
     @computed_field  # type: ignore[prop-decorator]
     @property

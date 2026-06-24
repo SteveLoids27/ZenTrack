@@ -22,9 +22,10 @@ When building **Digital Detox Timer** or any work guided by `.cursor/prompts/dig
 5. Complete the self-review checklist in the build prompt.
 6. Launch **Bugbot** subagent for code quality review (`subagent_type: bugbot`, `readonly: true`).
 7. Fix valid Bugbot findings; re-run checks.
-8. Update context files (`application.md`, `learnings.md`, `current-task.md`).
-9. Provide the milestone handoff template from the build prompt.
-10. Proceed to the next milestone only when all gates pass.
+8. **Record Bugbot findings** in `.cursor/context/bugbot-reviews.md` (severity, file, description, fixed/deferred).
+9. Update context files (`application.md`, `learnings.md`, `current-task.md`).
+10. Provide the milestone handoff template from the build prompt.
+11. Proceed to the next milestone only when all gates pass.
 
 ## Orchestrator alignment
 
@@ -37,11 +38,12 @@ When building **Digital Detox Timer** or any work guided by `.cursor/prompts/dig
 
 - Self-review and Bugbot are **required** after every milestone, not optional.
 - Bugbot findings marked Critical or High must be fixed before milestone completion.
-- Medium/Low findings: fix or document deferral reason in `learnings.md`.
+- Medium/Low findings: fix or document deferral reason in `learnings.md` and `bugbot-reviews.md`.
 
 ## Scope control
 
-- Build MVP milestones M0–M8 only unless user expands scope.
+- Build MVP milestones **M0, M1, M2, M3, M5, M8** only unless user expands scope.
+- **Deferred:** reflection journal, gamification, notifications (formerly M5–M7).
 - V2/V3 features (usage tracking, AI coach, social) are out of scope for V1.0.
 
 ## Final README on GitHub

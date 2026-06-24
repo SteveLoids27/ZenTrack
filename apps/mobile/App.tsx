@@ -2,111 +2,110 @@ import { StatusBar } from 'expo-status-bar';
 import { useEffect, useState } from 'react';
 import { ActivityIndicator, StyleSheet, Text, View } from 'react-native';
 
-const API_URL = process.env.EXPO_PUBLIC_API_URL ?? 'http://localhost:8000';
+import { checkHealth } from './src/api/client';
+import { AuthProvider, useAuth } from './src/auth/AuthContext';
+import { API_URL } from './src/config';
+import { DashboardScreen } from './src/screens/DashboardScreen';
+import { LoginScreen } from './src/screens/LoginScreen';
+import { RegisterScreen } from './src/screens/RegisterScreen';
 
-export default function App() {
+type AuthScreen = 'login' | 'register';
+
+function AppContent() {
+  const { user, loading } = useAuth();
+  const [authScreen, setAuthScreen] = useState<AuthScreen>('login');
   const [apiStatus, setApiStatus] = useState<'loading' | 'ok' | 'error'>('loading');
 
   useEffect(() => {
     let cancelled = false;
 
-    async function checkHealth() {
-      try {
-        const response = await fetch(`${API_URL}/health`);
-        if (!response.ok) {
-          throw new Error('Health check failed');
-        }
-        const data = await response.json();
-        if (!cancelled) {
-          setApiStatus(data.status === 'ok' ? 'ok' : 'error');
-        }
-      } catch {
-        if (!cancelled) {
-          setApiStatus('error');
-        }
+    async function loadHealth() {
+      const healthy = await checkHealth();
+      if (!cancelled) {
+        setApiStatus(healthy ? 'ok' : 'error');
       }
     }
 
-    checkHealth();
+    loadHealth();
     return () => {
       cancelled = true;
     };
   }, []);
 
-  return (
-    <View style={styles.container}>
-      <Text style={styles.title}>ZenTrack</Text>
-      <Text style={styles.subtitle}>Digital Detox Timer</Text>
-      <Text style={styles.tagline}>Make focus rewarding, not restriction painful.</Text>
+  if (loading) {
+    return (
+      <View style={styles.centered}>
+        <ActivityIndicator color="#95D5B2" size="large" />
+      </View>
+    );
+  }
 
-      <View style={styles.statusCard}>
-        {apiStatus === 'loading' && <ActivityIndicator color="#2D6A4F" />}
-        <Text style={styles.statusLabel}>API Status</Text>
-        <Text style={[styles.statusValue, apiStatus === 'ok' && styles.statusOk, apiStatus === 'error' && styles.statusError]}>
-          {apiStatus === 'loading' ? 'Checking…' : apiStatus === 'ok' ? 'Connected' : 'Unavailable'}
+  if (user) {
+    return <DashboardScreen />;
+  }
+
+  return (
+    <View style={styles.root}>
+      <View style={styles.header}>
+        <Text style={styles.brand}>ZenTrack</Text>
+        <Text style={styles.tagline}>Make focus rewarding, not restriction painful.</Text>
+        <Text style={[styles.apiStatus, apiStatus === 'ok' && styles.apiOk, apiStatus === 'error' && styles.apiError]}>
+          API: {apiStatus === 'loading' ? 'Checking…' : apiStatus === 'ok' ? 'Connected' : 'Unavailable'} ({API_URL})
         </Text>
-        <Text style={styles.apiUrl}>{API_URL}</Text>
       </View>
 
+      {authScreen === 'login' ? (
+        <LoginScreen onGoToRegister={() => setAuthScreen('register')} />
+      ) : (
+        <RegisterScreen onGoToLogin={() => setAuthScreen('login')} />
+      )}
       <StatusBar style="light" />
     </View>
   );
 }
 
+export default function App() {
+  return (
+    <AuthProvider>
+      <AppContent />
+    </AuthProvider>
+  );
+}
+
 const styles = StyleSheet.create({
-  container: {
+  root: {
+    flex: 1,
+    backgroundColor: '#1B4332',
+  },
+  centered: {
     flex: 1,
     backgroundColor: '#1B4332',
     alignItems: 'center',
     justifyContent: 'center',
-    padding: 24,
   },
-  title: {
-    fontSize: 36,
+  header: {
+    paddingTop: 56,
+    paddingHorizontal: 24,
+    gap: 4,
+  },
+  brand: {
+    fontSize: 28,
     fontWeight: '700',
     color: '#D8F3DC',
-    marginBottom: 4,
-  },
-  subtitle: {
-    fontSize: 16,
-    color: '#95D5B2',
-    marginBottom: 8,
   },
   tagline: {
-    fontSize: 14,
     color: '#B7E4C7',
-    textAlign: 'center',
-    marginBottom: 32,
+    fontSize: 13,
   },
-  statusCard: {
-    backgroundColor: '#2D6A4F',
-    borderRadius: 12,
-    padding: 20,
-    width: '100%',
-    maxWidth: 320,
-    alignItems: 'center',
-    gap: 6,
-  },
-  statusLabel: {
-    color: '#D8F3DC',
-    fontSize: 12,
-    textTransform: 'uppercase',
-    letterSpacing: 1,
-  },
-  statusValue: {
-    color: '#D8F3DC',
-    fontSize: 18,
-    fontWeight: '600',
-  },
-  statusOk: {
+  apiStatus: {
     color: '#95D5B2',
-  },
-  statusError: {
-    color: '#FFB4A2',
-  },
-  apiUrl: {
-    color: '#B7E4C7',
     fontSize: 11,
     marginTop: 4,
+  },
+  apiOk: {
+    color: '#B7E4C7',
+  },
+  apiError: {
+    color: '#FFB4A2',
   },
 });

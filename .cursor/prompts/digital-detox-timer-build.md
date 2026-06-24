@@ -20,7 +20,7 @@
 
 | Branch | Role |
 |--------|------|
-| `dev-steve` | All milestone building (M1–M8) — **work here** |
+| `dev-steve` | All milestone building (M1–M5, M8) — **work here** |
 | `main` | Stable — merge via PR when milestone(s) complete |
 
 - Push milestone commits to `origin/dev-steve`.
@@ -80,10 +80,11 @@ Custom Instructions: Review milestone [MX] implementation for bugs, logic errors
 
 If Bugbot reports findings:
 
-1. Fix valid issues
+1. Fix valid issues (High/Critical required before milestone completion)
 2. Re-run automated checks
 3. Re-run Bugbot only if material changes were made
-4. Document any deferred findings in `learnings.md`
+4. **Record all findings** in `.cursor/context/bugbot-reviews.md` (severity, file, description, disposition)
+5. Document any deferred findings in `learnings.md` with reason
 
 ### Failure / timeout policy
 
@@ -219,9 +220,9 @@ Dashboard → Select Duration → Start → Pause → Resume → Complete → Se
 
 ---
 
-## Milestone M4 — Dashboard Analytics
+## Milestone M5 — Dashboard Analytics
 
-**Goal:** Today, weekly, and monthly analytics views.
+**Goal:** Today, weekly, and monthly analytics views. **Final feature milestone before M8.**
 
 ### Deliverables
 
@@ -239,91 +240,6 @@ Dashboard → Select Duration → Start → Pause → Resume → Complete → Se
 
 ---
 
-## Milestone M5 — Reflection Journal
-
-**Goal:** Post-session reflections with history and edit.
-
-### Deliverables
-
-- `reflections` table migration
-- CRUD endpoints
-- Mobile: post-session reflection form (3 prompts)
-- History list + edit screen
-
-### Acceptance criteria
-
-- [ ] Reflection created after session completion
-- [ ] Reflection linked to `session_id`
-- [ ] User can view history (paginated)
-- [ ] User can edit own reflections only
-- [ ] Cannot reflect on another user's session
-
----
-
-## Milestone M6 — Gamification
-
-**Goal:** XP, levels, and badges awarded on triggers.
-
-### Deliverables
-
-- `achievements`, `user_xp` tables
-- XP award on session complete (minutes = XP)
-- Level calculation from XP thresholds
-- Badge evaluation on session complete and streak update
-- `GET /gamification/profile`, `/badges`
-- Mobile: level + badge display
-
-### Acceptance criteria
-
-- [ ] XP awarded correctly per duration rules
-- [ ] Levels map correctly to XP thresholds
-- [ ] All 6 MVP badges can be earned (test with fixtures)
-- [ ] Duplicate badges not awarded
-- [ ] Achievement notification payload ready for M7
-
-### Badge triggers
-
-| Badge | Condition |
-|-------|-----------|
-| First Focus Session | 1 completed session |
-| 3 Day Streak | 3 consecutive days |
-| 7 Day Streak | 7 consecutive days |
-| 30 Day Streak | 30 consecutive days |
-| 100 Focus Hours | 6000 cumulative minutes |
-| 365 Focus Hours | 21900 cumulative minutes |
-
----
-
-## Milestone M7 — Notifications
-
-**Goal:** Daily reminder, streak reminder, achievement notifications via FCM.
-
-### Deliverables
-
-- FCM token registration endpoint
-- User `reminder_time` preference
-- Scheduled/triggered notification logic
-- Mobile: permission request + token upload
-- Dev stub for FCM (log notifications locally if no Firebase creds)
-
-### Acceptance criteria
-
-- [ ] User can set reminder time
-- [ ] Daily reminder fires at configured time (or stub logs event)
-- [ ] Streak reminder when no session today
-- [ ] Achievement notification on badge unlock
-- [ ] Production FCM setup documented in README
-
-### Messages
-
-| Type | Message |
-|------|---------|
-| Daily | "Ready for your focus session?" |
-| Streak | "Complete one session today to keep your streak alive." |
-| Achievement | "Congratulations! You unlocked the [badge] badge." |
-
----
-
 ## Milestone M8 — Testing + Hardening
 
 **Goal:** Integration coverage, bug fixes, PR-ready MVP, and **final README on GitHub**.
@@ -331,7 +247,7 @@ Dashboard → Select Duration → Start → Pause → Resume → Complete → Se
 ### Deliverables
 
 - Integration tests for critical flows (auth → session → streak → dashboard)
-- Fix all known bugs from M1–M7
+- Fix all known bugs from M1–M5
 - API OpenAPI docs complete
 - **Finalize `README.md`** (see checklist below) — this is the public face of the repo on GitHub
 - Security pass: rate limiting on auth, CORS config, input sanitization
@@ -341,8 +257,8 @@ Dashboard → Select Duration → Start → Pause → Resume → Complete → Se
 Update root `README.md` so a new developer can clone and run without chat context. Include:
 
 - [ ] Project name, tagline, and product principle
-- [ ] Feature list (all MVP features implemented in M1–M7)
-- [ ] Architecture overview (mobile ↔ API ↔ Postgres ↔ FCM)
+- [ ] Feature list (all MVP features: M1–M5)
+- [ ] Architecture overview (mobile ↔ API ↔ Postgres)
 - [ ] Prerequisites (Docker, Node, Python versions)
 - [ ] Environment variables table (from `.env.example` with descriptions)
 - [ ] Quick start: clone → `.env` → `docker compose up` → mobile `npm start`
@@ -351,7 +267,7 @@ Update root `README.md` so a new developer can clone and run without chat contex
 - [ ] How to run tests (API + mobile)
 - [ ] Android emulator note (`10.0.2.2` vs `localhost`)
 - [ ] Git remote: `git@github-steveloids27:SteveLoids27/ZenTrack.git`
-- [ ] Milestone status table (all M0–M8 marked Done)
+- [ ] Milestone status table (M0, M1, M2, M3, M5, M8 marked Done)
 - [ ] Known limitations and V2 roadmap (brief)
 - [ ] Troubleshooting (common errors: Docker not running, SSH account, DB port)
 
@@ -370,7 +286,7 @@ Do **not** mark the application finished until `README.md` is pushed to GitHub (
 
 - [ ] Full pytest suite green
 - [ ] Mobile test suite green (or documented scope)
-- [ ] End-to-end smoke: register → focus session → reflection → badge
+- [ ] End-to-end smoke: register → focus session → view dashboard
 - [ ] No P0/P1 Bugbot findings open
 - [ ] **Final README checklist complete and committed**
 - [ ] **README pushed to GitHub `main`**
@@ -395,6 +311,7 @@ Do **not** mark the application finished until `README.md` is pushed to GitHub (
 
 ### Bugbot
 - Findings: N (all addressed / N deferred with reason)
+- Review log: `.cursor/context/bugbot-reviews.md` updated
 
 ### Context updated
 - application.md: yes

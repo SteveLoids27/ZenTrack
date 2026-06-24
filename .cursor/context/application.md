@@ -15,17 +15,12 @@ Habit-building mobile app that helps users improve focus and reduce digital dist
 | Mobile | React Native + Expo + TypeScript |
 | API | Python + FastAPI |
 | Database | PostgreSQL |
-| Auth | JWT (bcrypt/argon2 password hashing) |
-| Notifications | Firebase Cloud Messaging (FCM) |
-| Analytics | PostHog (hooks acceptable in MVP) |
+| Auth | JWT (bcrypt password hashing) |
 
 ## Architecture
 
 ```
 Mobile (Expo)  --REST/JWT-->  FastAPI API  -->  PostgreSQL
-                                    |
-                                    +--> FCM (notifications)
-                                    +--> PostHog (analytics events)
 ```
 
 ### Target layout
@@ -37,21 +32,40 @@ Mobile (Expo)  --REST/JWT-->  FastAPI API  -->  PostgreSQL
 
 ## Core Domain Entities
 
-- **User** — auth, settings (target minutes, reminder time, timezone)
-- **FocusSession** — timed session with status lifecycle
-- **Streak** — current/longest consecutive days with completed session
-- **Reflection** — post-session journal entry
-- **Achievement** — earned badges
-- **UserXP** — cumulative XP and derived level
+- **User** — auth, settings (target minutes, timezone), `token_version` for JWT invalidation
+- **FocusSession** — timed session with status lifecycle (M2)
+- **Streak** — current/longest consecutive days with completed session (M3)
+
+## API (M1–M2)
+
+| Method | Path | Auth | Description |
+|--------|------|------|-------------|
+| POST | `/api/v1/auth/register` | No | Create account, returns JWT |
+| POST | `/api/v1/auth/login` | No | Authenticate, returns JWT |
+| POST | `/api/v1/auth/logout` | Bearer | Invalidate token via `token_version` bump |
+| POST | `/api/v1/auth/reset-password` | No | Request reset (`email`) or complete (`token` + `new_password`) |
+| GET | `/api/v1/users/me` | Bearer | Current user profile |
+| POST | `/api/v1/sessions` | Bearer | Start focus session (`duration` minutes) |
+| PATCH | `/api/v1/sessions/{id}` | Bearer | `pause`, `resume`, `stop`, `complete` |
+| GET | `/api/v1/sessions` | Bearer | List sessions (optional date filters) |
+| GET | `/api/v1/sessions/{id}` | Bearer | Session detail |
+| GET | `/health` | No | API + DB health |
+
+**Focus session statuses:** `running`, `paused`, `completed`, `cancelled`. One active session per user.
+
+**JWT:** HS256, `sub` (user id), `tv` (token version), `exp`. Default expiry 24h (`JWT_EXPIRE_MINUTES`).
+
+**Password reset:** SMTP not wired; dev API returns `reset_token` in response for local testing.
 
 ## Conventions
 
 - UUID primary keys everywhere
 - Timestamps in UTC at storage; user timezone for streak day boundaries
-- API prefix: `/api/v1` (recommended)
+- API prefix: `/api/v1`
 - OpenAPI docs at `/docs`
 - Env vars via `.env` (never commit secrets)
 - Migrations via Alembic; never hand-edit production schema
+- Python 3.9 local venv works; Docker API uses Python 3.12
 
 ## Repository
 
@@ -62,7 +76,7 @@ Mobile (Expo)  --REST/JWT-->  FastAPI API  -->  PostgreSQL
 
 | Branch | Purpose |
 |--------|---------|
-| `dev-steve` | **Active development** — all milestone building (M1–M8) |
+| `dev-steve` | **Active development** — milestone building (M1–M5, M8) |
 | `main` | Stable release branch — merge from `dev-steve` via PR |
 
 **Rules for agents:**
@@ -89,22 +103,24 @@ Mobile (Expo)  --REST/JWT-->  FastAPI API  -->  PostgreSQL
 ## MVP Feature Checklist
 
 - [x] M0: Scaffold + DB + Docker
-- [ ] M1: Auth (register, login, logout, reset-password)
-- [ ] M2: Focus timer (start/pause/resume/stop/complete)
+- [x] M1: Auth (register, login, logout, reset-password)
+- [x] M2: Focus timer (start/pause/resume/stop/complete)
 - [ ] M3: Streaks + daily focus score
-- [ ] M4: Dashboard (today/weekly/monthly)
-- [ ] M5: Reflection journal
-- [ ] M6: Gamification (XP, levels, badges)
-- [ ] M7: Notifications (FCM)
-- [ ] M8: Integration tests + hardening
+- [ ] M5: Dashboard (today/weekly/monthly)
+- [ ] M8: Integration tests + hardening + README
+
+## Deferred (post-MVP)
+
+- Reflection journal, gamification, notifications (FCM)
 
 ## Constraints
 
 - V2/V3 features (usage tracking, AI coach, social) are **out of scope**
-- Notifications may use FCM stubs in dev; document production setup
+- Reflection, gamification, and notifications are **deferred post-MVP**
 - No commits/pushes unless user explicitly requests
 
 ## Key References
 
 - Full spec: `docs/DIGITAL_DETOX_TIMER_SPEC.md`
 - Build orchestration: `.cursor/prompts/digital-detox-timer-build.md`
+- Bugbot review log: `.cursor/context/bugbot-reviews.md`

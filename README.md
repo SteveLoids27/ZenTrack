@@ -54,6 +54,9 @@ Services:
 | API | http://localhost:8000 |
 | API docs | http://localhost:8000/docs |
 | Health | http://localhost:8000/health |
+| Auth register | `POST http://localhost:8000/api/v1/auth/register` |
+| Auth login | `POST http://localhost:8000/api/v1/auth/login` |
+| Current user | `GET http://localhost:8000/api/v1/users/me` (Bearer token) |
 | PostgreSQL | localhost:5433 (Docker; avoids conflict with local Postgres on 5432) |
 
 ### 3. Start mobile app
@@ -105,6 +108,24 @@ To connect manually:
 psql "host=localhost port=5433 dbname=zentrack user=postgres"
 ```
 
+### Verify users and logins in Postgres
+
+```sql
+-- All registered users
+SELECT id, name, email, created_at FROM users ORDER BY created_at DESC;
+
+-- Login and registration audit trail
+SELECT
+  le.created_at,
+  le.event_type,
+  le.success,
+  le.email,
+  u.name AS user_name
+FROM login_events le
+LEFT JOIN users u ON u.id = le.user_id
+ORDER BY le.created_at DESC;
+```
+
 ## Git workflow
 
 | Branch | Purpose |
@@ -136,14 +157,13 @@ See `.cursor/prompts/digital-detox-timer-build.md` for the full milestone plan (
 | Milestone | Status |
 |-----------|--------|
 | M0 Scaffold + Docker | Done |
-| M1 Authentication | Pending |
-| M2 Focus Timer | Pending |
+| M1 Authentication | Done |
+| M2 Focus Timer | Done |
 | M3 Streaks + Focus Score | Pending |
-| M4 Dashboard | Pending |
-| M5 Reflection Journal | Pending |
-| M6 Gamification | Pending |
-| M7 Notifications | Pending |
+| M5 Dashboard | Pending |
 | M8 Testing + Hardening | Pending |
+
+> MVP scope: M0 → M1 → M2 → M3 → M5 → M8. Reflection, gamification, and notifications are deferred.
 
 ## License
 
